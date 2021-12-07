@@ -3,6 +3,21 @@ const onclickAdd = () => {
   const inputText = document.getElementById("add-text").value;
   document.getElementById("add-text").value = "";
 
+  createIncompleteList(inputText);
+};
+
+/**
+ * 未完了リストから指定の要素を削除
+ * @param {*} target
+ */
+const deleteFromIncompleteList = (target) => {
+  document.getElementById("incomplete-list").removeChild(target);
+};
+
+/**
+ * 戻すボタンの処理
+ */
+const createIncompleteList = (text) => {
   // 要素の作成
   const li = document.createElement("li");
   const div = document.createElement("div");
@@ -14,13 +29,18 @@ const onclickAdd = () => {
   completeButton.addEventListener("click", () => {
     // 移動対象のアイテムを取得
     const moveTargetLi = completeButton.closest("li");
-    const moveTarget = completeButton.closest("div");
-    const text = moveTarget.firstElementChild.innerText;
+    //const moveTarget = completeButton.closest("div");
 
     // 戻すボタン
     const revertButton = document.createElement("button");
     revertButton.innerHTML = "戻す";
-    revertButton.addEventListener("click", () => {});
+    revertButton.addEventListener("click", () => {
+      // 押された戻すボタンの親タグを完了リストから削除
+      const deleteTargetLi = revertButton.closest("li");
+      const deleteTarget = revertButton.closest("div");
+      document.getElementById("complete-list").removeChild(deleteTargetLi);
+      createIncompleteList(deleteTarget.firstElementChild.innerText);
+    });
 
     const moveLi = document.createElement("li");
     const moveDiv = document.createElement("div");
@@ -56,7 +76,7 @@ const onclickAdd = () => {
   div.className = "list-row";
 
   // pタグ内に表示する値をセット。
-  p.innerHTML = inputText;
+  p.innerHTML = text;
 
   div.appendChild(p);
   div.appendChild(completeButton);
@@ -65,49 +85,6 @@ const onclickAdd = () => {
 
   // // 未完了リストに追加
   document.getElementById("incomplete-list").appendChild(li);
-};
-
-/**
- * 未完了リストから指定の要素を削除
- * @param {*} target
- */
-const deleteFromIncompleteList = (target) => {
-  document.getElementById("incomplete-list").removeChild(target);
-};
-
-/**
- * 戻すボタンの処理
- */
-const revertFromCompleteList = (target) => {
-  // 移動対象のアイテムを取得
-  const moveTargetLi = target.closest("li");
-  const moveTarget = target.closest("div");
-  const text = moveTarget.firstElementChild.innerText;
-
-  // 戻すボタン
-  const revertButton = document.createElement("button");
-  revertButton.innerHTML = "戻す";
-  revertButton.addEventListener("click", () => {});
-
-  const moveLi = document.createElement("li");
-  const moveDiv = document.createElement("div");
-  const moveP = document.createElement("p");
-
-  // // クラス名をセット
-  moveDiv.className = "list-row";
-
-  // pタグ内に表示する値をセット。
-  moveP.innerHTML = text;
-
-  moveDiv.appendChild(moveP);
-  moveDiv.appendChild(revertButton);
-  moveLi.appendChild(moveDiv);
-  console.log(moveLi);
-  // 完了リストへ
-  document.getElementById("complete-list").appendChild(moveLi);
-
-  // 押された完了ボタンの親タグを未完了リストから削除
-  deleteFromIncompleteList(moveTargetLi);
 };
 
 document
